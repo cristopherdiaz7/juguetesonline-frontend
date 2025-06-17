@@ -1,5 +1,8 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import Logout from './Logout';
 
 const navButtonStyle = {
   fontWeight: 600,
@@ -11,6 +14,9 @@ const navButtonStyle = {
 };
 
 function Home() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <div className="container-fluid min-vh-100 p-0" style={{background: '#f8fafc', fontFamily: 'Quicksand, Segoe UI, sans-serif'}}>
       <h1 className="text-center py-4" style={{
@@ -32,8 +38,18 @@ function Home() {
             <button className="btn me-2 mb-1" style={{...navButtonStyle, background: '#fbbf24', color: '#fff', border: 'none'}}>Productos</button>
           </div>
           <div className="d-flex align-items-center flex-wrap">
-            <button className="btn me-2 mb-1" style={{...navButtonStyle, background: '#fbbf24', color: '#fff', border: 'none'}}>Registrarse</button>
-            <button className="btn me-2 mb-1" style={{...navButtonStyle, background: '#fbbf24', color: '#fff', border: 'none'}}>Iniciar sesión</button>
+            {!user && (
+              <>
+                <button className="btn me-2 mb-1" style={{...navButtonStyle, background: '#fbbf24', color: '#fff', border: 'none'}} onClick={() => navigate('/register')}>Registrarse</button>
+                <button className="btn me-2 mb-1" style={{...navButtonStyle, background: '#fbbf24', color: '#fff', border: 'none'}} onClick={() => navigate('/login')}>Iniciar sesión</button>
+              </>
+            )}
+            {user && (
+              <>
+                <span className="me-2 mb-1" style={{fontWeight: 600, color: '#e11d48'}}>Hola, {user.username}!</span>
+                <Logout />
+              </>
+            )}
             <input type="text" className="form-control ms-2 mb-1" placeholder="Buscar productos" style={{width: '170px', height: '36px', fontSize: '1rem', background: '#fef9c3', border: '2px solid #fbbf24', borderRadius: '20px', fontWeight: 500}} />
             <button className="btn ms-2 mb-1" style={{...navButtonStyle, background: '#fbbf24', color: '#fff', border: 'none'}}>Buscar</button>
           </div>
