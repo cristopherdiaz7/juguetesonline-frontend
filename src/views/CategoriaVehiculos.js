@@ -22,6 +22,12 @@ export default function CategoriaVehiculos() {
       setTimeout(() => setShowAlert(false), 2000);
       return;
     }
+    if (user.role === 'admin') {
+      setAlertMsg('Los administradores no pueden comprar productos.');
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 2000);
+      return;
+    }
     setModalProduct(product);
     setQuantity(1);
     setShowModal(true);
@@ -29,6 +35,12 @@ export default function CategoriaVehiculos() {
   const handleAddToCartDirect = (product) => {
     if (!user) {
       setAlertMsg('Debes registrarte o iniciar sesión.');
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 2000);
+      return;
+    }
+    if (user.role === 'admin') {
+      setAlertMsg('Los administradores no pueden comprar productos.');
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 2000);
       return;
@@ -69,7 +81,9 @@ export default function CategoriaVehiculos() {
                 <span className="ms-2 text-decoration-line-through" style={{color: '#888', fontSize: '1rem'}}>$26.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'camioneta4x4', name: 'Camioneta 4x4 a Control Remoto con Luces Captor Speed Thunder Rojo', price: 19000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'camioneta4x4', name: 'Camioneta 4x4 a Control Remoto con Luces Captor Speed Thunder Rojo', price: 19000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -83,7 +97,9 @@ export default function CategoriaVehiculos() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$21.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'spidermantruck', name: 'Camión Spiderman Edición Limitada', price: 21000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'spidermantruck', name: 'Camión Spiderman Edición Limitada', price: 21000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -98,7 +114,9 @@ export default function CategoriaVehiculos() {
                 <span className="ms-2 text-decoration-line-through" style={{color: '#888', fontSize: '1rem'}}>$13.600</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'spidermaninvolcable', name: 'Auto a Fricción Spiderman Color Rojo Negro', price: 10900})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'spidermaninvolcable', name: 'Auto a Fricción Spiderman Color Rojo Negro', price: 10900})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -113,7 +131,9 @@ export default function CategoriaVehiculos() {
                 <span className="ms-2 text-decoration-line-through" style={{color: '#888', fontSize: '1rem'}}>$71.800</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'autovolveralfuturo', name: 'Auto Volver Al Futuro Back To The Future III Escala 1:24', price: 53900})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'autovolveralfuturo', name: 'Auto Volver Al Futuro Back To The Future III Escala 1:24', price: 53900})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>

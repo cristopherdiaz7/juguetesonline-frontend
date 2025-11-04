@@ -11,6 +11,9 @@ import CategoriaRetro from './views/CategoriaRetro';
 import CategoriaVehiculos from './views/CategoriaVehiculos';
 import ProtectedRoute from './components/ProtectedRoute';
 import Cart from './views/Cart';
+import AdminDashboard from './views/AdminDashboard';
+import MyOrders from './views/MyOrders';
+import ChangePassword from './views/ChangePassword';
 import './App.css';
 
 import Navbar from './components/Navbar';
@@ -33,7 +36,22 @@ function App() {
             <Cart />
           </ProtectedRoute>
         } />
+        <Route path="/admin" element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        } />
         <Route path="/buscar" element={<BusquedaGlobal />} />
+        <Route path="/mis-pedidos" element={
+          <ProtectedRoute>
+            <MyOrders />
+          </ProtectedRoute>
+        } />
+        <Route path="/cambiar-contrasena" element={
+          <ProtectedRoute>
+            <ChangePassword />
+          </ProtectedRoute>
+        } />
         <Route path="/" element={<Home />} />
       </Routes>
         {/* Footer de referencias */}

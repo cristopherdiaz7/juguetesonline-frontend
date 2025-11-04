@@ -24,6 +24,12 @@ export default function CategoriaPosters() {
       setTimeout(() => setShowAlert(false), 2000);
       return;
     }
+    if (user.role === 'admin') {
+      setAlertMsg('Los administradores no pueden comprar productos.');
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 2000);
+      return;
+    }
     setModalProduct(product);
     setQuantity(1);
     setShowModal(true);
@@ -31,6 +37,12 @@ export default function CategoriaPosters() {
   const handleAddToCartDirect = (product) => {
     if (!user) {
       setAlertMsg('Debes registrarte o iniciar sesión.');
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 2000);
+      return;
+    }
+    if (user.role === 'admin') {
+      setAlertMsg('Los administradores no pueden comprar productos.');
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 2000);
       return;
@@ -72,7 +84,9 @@ export default function CategoriaPosters() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$12.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddToCartDirect({id: 'posterbatman', name: 'Póster Batman Edición Limitada', price: 12000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddToCartDirect({id: 'posterbatman', name: 'Póster Batman Edición Limitada', price: 12000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -86,7 +100,9 @@ export default function CategoriaPosters() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$13.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddToCartDirect({id: 'strangerthings', name: 'Póster Stranger Things Edición Limitada', price: 13000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddToCartDirect({id: 'strangerthings', name: 'Póster Stranger Things Edición Limitada', price: 13000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -100,7 +116,9 @@ export default function CategoriaPosters() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$14.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddToCartDirect({id: 'venom', name: 'Póster Venom Edición Limitada', price: 14000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddToCartDirect({id: 'venom', name: 'Póster Venom Edición Limitada', price: 14000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -114,7 +132,9 @@ export default function CategoriaPosters() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$15.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddToCartDirect({id: 'harrypotter', name: 'Póster Harry Potter Edición Limitada', price: 15000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddToCartDirect({id: 'harrypotter', name: 'Póster Harry Potter Edición Limitada', price: 15000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -128,7 +148,9 @@ export default function CategoriaPosters() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$16.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddToCartDirect({id: 'naruto', name: 'Póster Naruto Edición Limitada', price: 16000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddToCartDirect({id: 'naruto', name: 'Póster Naruto Edición Limitada', price: 16000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -142,7 +164,9 @@ export default function CategoriaPosters() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$17.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddToCartDirect({id: 'hulkcomics', name: 'Póster Hulk Comics Edición Limitada', price: 17000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddToCartDirect({id: 'hulkcomics', name: 'Póster Hulk Comics Edición Limitada', price: 17000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>

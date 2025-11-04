@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { NotificationsProvider } from './context/NotificationsContext';
+import { OrdersProvider } from './context/OrdersContext';
 import { CartProvider } from './context/CartContext';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -13,9 +15,13 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
+        <NotificationsProvider>
+          <OrdersProvider>
+            <CartProvider>
+              <App />
+            </CartProvider>
+          </OrdersProvider>
+        </NotificationsProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>

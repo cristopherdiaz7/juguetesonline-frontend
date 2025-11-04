@@ -18,7 +18,7 @@ function Home() {
       <div className="container-fluid py-3 px-4 d-flex justify-content-between align-items-center" style={{background: 'rgba(255,255,255,0.0)'}}>
         <div className="d-flex align-items-center gap-3">
           <h2 className="home-kids-title" style={{fontSize: '2.1rem', color: '#2979ff', marginBottom: 0, fontWeight: 700}}><FaHome style={{marginRight: 8}}/>Inicio</h2>
-          {user && (
+          {user && user.role !== 'admin' && (
             <button className="home-kids-btn" style={{background: '#ffb300', color: '#fff', fontWeight: 700}} onClick={() => navigate('/cart')}><FaShoppingCart style={{marginRight: 6}}/>Carrito ({cart.reduce((sum, item) => sum + item.quantity, 0)})</button>
           )}
         </div>

@@ -25,6 +25,12 @@ export default function CategoriaRetro() {
       setTimeout(() => setShowAlert(false), 2000);
       return;
     }
+    if (user.role === 'admin') {
+      setAlertMsg('Los administradores no pueden comprar productos.');
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 2000);
+      return;
+    }
     setModalProduct(product);
     setQuantity(1);
     setShowModal(true);
@@ -32,6 +38,12 @@ export default function CategoriaRetro() {
   const handleAddToCartDirect = (product) => {
     if (!user) {
       setAlertMsg('Debes registrarte o iniciar sesión.');
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 2000);
+      return;
+    }
+    if (user.role === 'admin') {
+      setAlertMsg('Los administradores no pueden comprar productos.');
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 2000);
       return;
@@ -71,7 +83,9 @@ export default function CategoriaRetro() {
                 <h5 className="categoria-retro-card-title">Trompo Retro Edición Limitada</h5>
                 <div className="mb-2 categoria-retro-card-price">$8.500</div>
                 <div className="mb-1 categoria-retro-card-envio">Envío Gratis</div>
-                <button className="categoria-retro-btn w-100 mt-auto" onClick={() => handleAddToCartDirect({id: 'tromporetro', name: 'Trompo Retro Edición Limitada', price: 8500})}>Agregar al carrito</button>
+                {user?.role !== 'admin' && (
+                  <button className="categoria-retro-btn w-100 mt-auto" onClick={() => handleAddToCartDirect({id: 'tromporetro', name: 'Trompo Retro Edición Limitada', price: 8500})}>Agregar al carrito</button>
+                )}
               </div>
             </div>
           </div>
@@ -83,7 +97,9 @@ export default function CategoriaRetro() {
                 <h5 className="categoria-retro-card-title">Barbie Retro Edición Limitada</h5>
                 <div className="mb-2 categoria-retro-card-price">$9.000</div>
                 <div className="mb-1 categoria-retro-card-envio">Envío Gratis</div>
-                <button className="categoria-retro-btn w-100 mt-auto" onClick={() => handleAddToCartDirect({id: 'barbieretro', name: 'Barbie Retro Edición Limitada', price: 9000})}>Agregar al carrito</button>
+                {user?.role !== 'admin' && (
+                  <button className="categoria-retro-btn w-100 mt-auto" onClick={() => handleAddToCartDirect({id: 'barbieretro', name: 'Barbie Retro Edición Limitada', price: 9000})}>Agregar al carrito</button>
+                )}
               </div>
             </div>
           </div>
@@ -95,7 +111,9 @@ export default function CategoriaRetro() {
                 <h5 className="categoria-retro-card-title">Moto Plástico Retro</h5>
                 <div className="mb-2 categoria-retro-card-price">$10.000</div>
                 <div className="mb-1 categoria-retro-card-envio">Envío Gratis</div>
-                <button className="categoria-retro-btn w-100 mt-auto" onClick={() => handleAddToCartDirect({id: 'motoplasticoretro', name: 'Moto Plástico Retro', price: 10000})}>Agregar al carrito</button>
+                {user?.role !== 'admin' && (
+                  <button className="categoria-retro-btn w-100 mt-auto" onClick={() => handleAddToCartDirect({id: 'motoplasticoretro', name: 'Moto Plástico Retro', price: 10000})}>Agregar al carrito</button>
+                )}
               </div>
             </div>
           </div>
@@ -107,7 +125,9 @@ export default function CategoriaRetro() {
                 <h5 className="categoria-retro-card-title">Soldaditos Retro</h5>
                 <div className="mb-2 categoria-retro-card-price">$7.500</div>
                 <div className="mb-1 categoria-retro-card-envio">Envío Gratis</div>
-                <button className="categoria-retro-btn w-100 mt-auto" onClick={() => handleAddToCartDirect({id: 'soldaditosretro', name: 'Soldaditos Retro', price: 7500})}>Agregar al carrito</button>
+                {user?.role !== 'admin' && (
+                  <button className="categoria-retro-btn w-100 mt-auto" onClick={() => handleAddToCartDirect({id: 'soldaditosretro', name: 'Soldaditos Retro', price: 7500})}>Agregar al carrito</button>
+                )}
               </div>
             </div>
           </div>
@@ -119,7 +139,9 @@ export default function CategoriaRetro() {
                 <h5 className="categoria-retro-card-title">Star Wars Retro</h5>
                 <div className="mb-2 categoria-retro-card-price">$11.000</div>
                 <div className="mb-1 categoria-retro-card-envio">Envío Gratis</div>
-                <button className="categoria-retro-btn w-100 mt-auto" onClick={() => handleAddToCartDirect({id: 'starwars', name: 'Star Wars Retro', price: 11000})}>Agregar al carrito</button>
+                {user?.role !== 'admin' && (
+                  <button className="categoria-retro-btn w-100 mt-auto" onClick={() => handleAddToCartDirect({id: 'starwars', name: 'Star Wars Retro', price: 11000})}>Agregar al carrito</button>
+                )}
               </div>
             </div>
           </div>
@@ -131,7 +153,9 @@ export default function CategoriaRetro() {
                 <h5 className="categoria-retro-card-title">Pistola de Agua Retro</h5>
                 <div className="mb-2 categoria-retro-card-price">$6.000</div>
                 <div className="mb-1 categoria-retro-card-envio">Envío Gratis</div>
-                <button className="categoria-retro-btn w-100 mt-auto" onClick={() => handleAddToCartDirect({id: 'pistoladeagua', name: 'Pistola de Agua Retro', price: 6000})}>Agregar al carrito</button>
+                {user?.role !== 'admin' && (
+                  <button className="categoria-retro-btn w-100 mt-auto" onClick={() => handleAddToCartDirect({id: 'pistoladeagua', name: 'Pistola de Agua Retro', price: 6000})}>Agregar al carrito</button>
+                )}
               </div>
             </div>
           </div>

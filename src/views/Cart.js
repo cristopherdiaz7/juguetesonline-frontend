@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { useOrders } from '../context/OrdersContext';
 
 export default function Cart() {
   const { cart, removeFromCart, updateQuantity, total, clearCart } = useCart();
@@ -7,6 +9,8 @@ export default function Cart() {
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ nombre: '', direccion: '', ciudad: '', telefono: '' });
   const [submitted, setSubmitted] = useState(false);
+  const { user } = useAuth();
+  const { addOrder } = useOrders();
 
   if (cart.length === 0) {
     return (
@@ -67,7 +71,22 @@ export default function Cart() {
                 {submitted ? (
                   <div className="alert alert-success">¡Compra finalizada! Pronto nos contactaremos para coordinar el envío.</div>
                 ) : (
-                  <form onSubmit={e => { e.preventDefault(); setSubmitted(true); clearCart(); }}>
+                  <form onSubmit={e => {
+                    e.preventDefault();
+                    // Crear pedido pendiente
+                    const order = {
+                      id: `ord_${Date.now()}`,
+                      username: user?.username,
+                      items: cart.map(it => ({ id: it.id, name: it.name ?? it.nombre, price: it.price ?? it.precio ?? 0, quantity: it.quantity })),
+                      total,
+                      shipping: { ...form },
+                      status: 'pendiente',
+                      createdAt: new Date().toISOString(),
+                    };
+                    addOrder(order);
+                    setSubmitted(true);
+                    clearCart();
+                  }}>
                     <div className="mb-3">
                       <label className="form-label">Nombre completo</label>
                       <input type="text" className="form-control" required value={form.nombre} onChange={e => setForm({ ...form, nombre: e.target.value })} />

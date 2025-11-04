@@ -25,6 +25,12 @@ export default function CategoriaFiguras() {
       setTimeout(() => setShowAlert(false), 2000);
       return;
     }
+    if (user.role === 'admin') {
+      setAlertMsg('Los administradores no pueden comprar productos.');
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 2000);
+      return;
+    }
     setModalProduct(product);
     setQuantity(1);
     setShowModal(true);
@@ -62,7 +68,9 @@ export default function CategoriaFiguras() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$52.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'spiderman', name: 'Spiderman Titan Hero Figura De 30 Cm.', price: 52000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'spiderman', name: 'Spiderman Titan Hero Figura De 30 Cm.', price: 52000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -76,7 +84,9 @@ export default function CategoriaFiguras() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$46.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'deadpool', name: 'Figura Articulado De Marvel Deadpool 30 Cm', price: 46000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'deadpool', name: 'Figura Articulado De Marvel Deadpool 30 Cm', price: 46000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -90,7 +100,9 @@ export default function CategoriaFiguras() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$51.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'iroman', name: 'Figura Ironman Titan Hero', price: 51000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'iroman', name: 'Figura Ironman Titan Hero', price: 51000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -104,7 +116,9 @@ export default function CategoriaFiguras() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$47.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'grogu', name: 'Figura Grogu Star Wars', price: 47000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'grogu', name: 'Figura Grogu Star Wars', price: 47000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -118,7 +132,9 @@ export default function CategoriaFiguras() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$53.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'batman', name: 'Figura Batman DC Comics', price: 53000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'batman', name: 'Figura Batman DC Comics', price: 53000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>
@@ -132,7 +148,9 @@ export default function CategoriaFiguras() {
                 <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$55.000</span>
               </div>
               <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'messi', name: 'Figura Messi Selección Argentina', price: 55000})}>Agregar al carrito</button>
+              {user?.role !== 'admin' && (
+                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'messi', name: 'Figura Messi Selección Argentina', price: 55000})}>Agregar al carrito</button>
+              )}
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
 
 const CartContext = createContext();
 
@@ -7,7 +8,31 @@ export function useCart() {
 }
 
 export function CartProvider({ children }) {
+  const { user } = useAuth();
   const [cart, setCart] = useState([]);
+
+  // Helper para leer/escribir todos los carritos
+  const readAllCarts = () => {
+    try {
+      const raw = localStorage.getItem('cartsByUser');
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  };
+  const writeAllCarts = (all) => {
+    localStorage.setItem('cartsByUser', JSON.stringify(all));
+  };
+
+  // Cargar el carrito del usuario actual al iniciar o cuando cambia el usuario
+  useEffect(() => {
+    if (!user) {
+      setCart([]);
+      return;
+    }
+    const all = readAllCarts();
+    setCart(all[user.username] || []);
+  }, [user?.username]);
 
   function addToCart(product, quantity = 1) {
     setCart(prev => {
@@ -38,7 +63,15 @@ export function CartProvider({ children }) {
     setCart([]);
   }
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = cart.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
+
+  // Persistir carrito del usuario actual cuando cambie
+  useEffect(() => {
+    if (!user) return;
+    const all = readAllCarts();
+    all[user.username] = cart;
+    writeAllCarts(all);
+  }, [cart, user?.username]);
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, total }}>

@@ -59,12 +59,23 @@ function CategoriaPeluches() {
       setTimeout(() => setShowAlert(false), 2000);
       return;
     }
+    if (user.role === 'admin') {
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 2000);
+      return;
+    }
     setSelectedProduct(peluche);
     setShowModal(true);
   };
 
   const handleConfirmAdd = () => {
-    addToCart(selectedProduct, quantity);
+    // Normalizar al esquema {id, name, price}
+    const normalized = {
+      id: selectedProduct.id,
+      name: selectedProduct.nombre,
+      price: selectedProduct.precio,
+    };
+    addToCart(normalized, quantity);
     setShowModal(false);
     setQuantity(1);
   };
@@ -74,7 +85,7 @@ function CategoriaPeluches() {
       <h2>Peluches</h2>
       {showAlert && (
         <div className="alert alert-warning" role="alert">
-          Debes iniciar sesión para agregar al carrito.
+          {user?.role === 'admin' ? 'Los administradores no pueden comprar productos.' : 'Debes iniciar sesión para agregar al carrito.'}
         </div>
       )}
       <div className="row">
@@ -91,12 +102,14 @@ function CategoriaPeluches() {
                 <h5 className="card-title">{peluche.nombre}</h5>
                 <p className="card-text">{peluche.descripcion}</p>
                 <p className="card-text fw-bold">${peluche.precio}</p>
-                <button
-                  className="btn btn-primary mt-auto"
-                  onClick={() => handleAddToCart(peluche)}
-                >
-                  Agregar al carrito
-                </button>
+                {user?.role !== 'admin' && (
+                  <button
+                    className="btn btn-primary mt-auto"
+                    onClick={() => handleAddToCart(peluche)}
+                  >
+                    Agregar al carrito
+                  </button>
+                )}
               </div>
             </div>
           </div>
