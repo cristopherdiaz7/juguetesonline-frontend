@@ -1,49 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import grogu from "../assets/grogu.jpg";
-import stitch from "../assets/stitch.jpg";
-import mufasa from "../assets/mufasa.jpg";
-import harrypotter from "../assets/harrypotter.jpg";
-import strangerthings from "../assets/strangerthings.jpg";
-
-const peluches = [
-  {
-    id: 1,
-    nombre: "Grogu",
-    precio: 5000,
-    imagen: grogu,
-    descripcion: "Peluchito de Grogu (Baby Yoda) de Star Wars.",
-  },
-  {
-    id: 2,
-    nombre: "Stitch",
-    precio: 4500,
-    imagen: stitch,
-    descripcion: "Peluchito de Stitch de Lilo & Stitch.",
-  },
-  {
-    id: 3,
-    nombre: "Mufasa",
-    precio: 6000,
-    imagen: mufasa,
-    descripcion: "Peluchito de Mufasa de El Rey León.",
-  },
-  {
-    id: 4,
-    nombre: "Harry Potter",
-    precio: 5500,
-    imagen: harrypotter,
-    descripcion: "Peluchito de Harry Potter.",
-  },
-  {
-    id: 5,
-    nombre: "Stranger Things",
-    precio: 5200,
-    imagen: strangerthings,
-    descripcion: "Peluchito de Stranger Things.",
-  },
-];
+import api, { getMediaUrl } from '../services/api';
+import groguImg from '../assets/grogu.jpg';
 
 function CategoriaPeluches() {
   const { addToCart } = useCart();
@@ -52,6 +11,26 @@ function CategoriaPeluches() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const resp = await api.get('/productos/?categoria=peluches');
+        if (mounted) {
+          const items = resp.data || [];
+          setProducts(items.filter(p => (p.categoria || '').toLowerCase() === 'peluches'));
+        }
+      } catch (e) {
+        console.error('Error cargando peluches', e);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
 
   const handleAddToCart = (peluche) => {
     if (!user) {
@@ -69,11 +48,11 @@ function CategoriaPeluches() {
   };
 
   const handleConfirmAdd = () => {
-    // Normalizar al esquema {id, name, price}
+    if (!selectedProduct) return;
     const normalized = {
       id: selectedProduct.id,
-      name: selectedProduct.nombre,
-      price: selectedProduct.precio,
+      name: selectedProduct.nombre ?? selectedProduct.name,
+      price: Number(selectedProduct.precio ?? selectedProduct.price) || 0,
     };
     addToCart(normalized, quantity);
     setShowModal(false);
@@ -89,52 +68,47 @@ function CategoriaPeluches() {
         </div>
       )}
       <div className="row">
-        {peluches.map((peluche) => (
-          <div className="col-md-4 mb-4" key={peluche.id}>
-            <div className="card h-100">
-              <img
-                src={peluche.imagen}
-                className="card-img-top"
-                alt={peluche.nombre}
-                style={{ height: "250px", objectFit: "contain", backgroundColor: "#f8f9fa" }}
-              />
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">{peluche.nombre}</h5>
-                <p className="card-text">{peluche.descripcion}</p>
-                <p className="card-text fw-bold">${peluche.precio}</p>
-                {user?.role !== 'admin' && (
-                  <button
-                    className="btn btn-primary mt-auto"
-                    onClick={() => handleAddToCart(peluche)}
-                  >
-                    Agregar al carrito
-                  </button>
-                )}
+        {loading ? (
+          <div>Cargando productos...</div>
+        ) : products.length === 0 ? (
+          <p>No hay productos en esta categoría.</p>
+        ) : (
+          products.map(peluche => (
+            <div className="col-md-4 mb-4" key={peluche.id}>
+              <div className="card h-100">
+                <div style={{ height: 250, objectFit: 'contain', backgroundColor: '#f8f9fa', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  {peluche.imagen ? (
+                    <img src={getMediaUrl(peluche.imagen)} alt={peluche.nombre ?? peluche.name} style={{maxHeight:'100%', maxWidth:'100%', objectFit:'contain'}} />
+                  ) : (
+                    <img src={groguImg} alt={peluche.nombre ?? peluche.name} style={{maxHeight:'100%', maxWidth:'100%', objectFit:'contain'}} />
+                  )}
+                </div>
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title">{peluche.nombre ?? peluche.name}</h5>
+                  {peluche.descripcion && <p className="card-text">{peluche.descripcion}</p>}
+                  <p className="card-text fw-bold">${(Number(peluche.precio ?? peluche.price) || 0).toLocaleString()}</p>
+                  {user?.role !== 'admin' && (
+                    <button className="btn btn-primary mt-auto" onClick={() => handleAddToCart(peluche)}>Agregar al carrito</button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Modal de confirmación */}
       {showModal && (
-        <div
-          className="modal show"
-          style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
-        >
+        <div className="modal show" style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}>
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Agregar al carrito</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setShowModal(false)}
-                ></button>
+                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
               </div>
               <div className="modal-body">
                 <p>
-                  ¿Cuántos <b>{selectedProduct?.nombre}</b> quieres agregar?
+                  ¿Cuántos <b>{selectedProduct?.nombre ?? selectedProduct?.name}</b> quieres agregar?
                 </p>
                 <input
                   type="number"
@@ -146,15 +120,8 @@ function CategoriaPeluches() {
                 />
               </div>
               <div className="modal-footer">
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancelar
-                </button>
-                <button className="btn btn-primary" onClick={handleConfirmAdd}>
-                  Confirmar
-                </button>
+                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancelar</button>
+                <button className="btn btn-primary" onClick={handleConfirmAdd}>Confirmar</button>
               </div>
             </div>
           </div>

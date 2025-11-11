@@ -39,6 +39,9 @@ export default function Navbar() {
           {user?.role === 'admin' && (
             <Link to="/admin" className="btn btn-outline-secondary me-2">Admin</Link>
           )}
+          {user?.role === 'admin' && (
+            <Link to="/usuarios" className="btn btn-outline-secondary me-2">Usuarios</Link>
+          )}
           {user && user.role !== 'admin' && (
             <Link to="/mis-pedidos" className="btn btn-outline-success me-2">Mis pedidos</Link>
           )}

@@ -39,12 +39,17 @@ export default function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (register(username, password)) {
-      navigate('/');
+    setError('');
+    const payload = { username, password, email: '', tipo: 'comprador', direccion: '' };
+    const res = await register(payload);
+    if (res.ok) {
+      navigate('/login');
     } else {
-      setError('El usuario ya existe');
+      // backend might return {error: '...'} or validation details
+      const msg = res.error?.error || (res.error?.detail) || 'Error en registro';
+      setError(typeof msg === 'string' ? msg : JSON.stringify(msg));
     }
   };
 

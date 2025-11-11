@@ -1,21 +1,39 @@
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import React from 'react';
 import { useCart } from '../context/CartContext';
-import camioneta4x4Img from '../assets/4x4rojo.jpg';
-import spidermantruckImg from '../assets/spidermantruck.jpg';
-import spidermaninvolcableImg from '../assets/spidermaninvolcable.jpg';
-import autovolveralfuturoImg from '../assets/autovolveralfuturo.jpg';
+import api, { getMediaUrl } from '../services/api';
+import camionetaFallback from '../assets/4x4rojo.jpg';
 
 export default function CategoriaVehiculos() {
   const { addToCart } = useCart();
   const { user } = useAuth();
-  const [showAlert, setShowAlert] = React.useState(false);
-  const [alertMsg, setAlertMsg] = React.useState('');
-  const [showModal, setShowModal] = React.useState(false);
-  const [modalProduct, setModalProduct] = React.useState(null);
-  const [quantity, setQuantity] = React.useState(1);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMsg, setAlertMsg] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [modalProduct, setModalProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleAddClick = (product) => {
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const resp = await api.get('/productos/?categoria=vehiculos');
+        if (mounted) {
+          const items = resp.data || [];
+          setProducts(items.filter(p => (p.categoria || '').toLowerCase() === 'vehiculos'));
+        }
+      } catch (e) {
+        console.error('Error cargando vehiculos', e);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
+  const openAddModal = (product) => {
     if (!user) {
       setAlertMsg('Debes registrarte o iniciar sesión.');
       setShowAlert(true);
@@ -32,7 +50,8 @@ export default function CategoriaVehiculos() {
     setQuantity(1);
     setShowModal(true);
   };
-  const handleAddToCartDirect = (product) => {
+
+  const handleQuickAdd = (product) => {
     if (!user) {
       setAlertMsg('Debes registrarte o iniciar sesión.');
       setShowAlert(true);
@@ -45,15 +64,25 @@ export default function CategoriaVehiculos() {
       setTimeout(() => setShowAlert(false), 2000);
       return;
     }
-    addToCart({ ...product }, 1);
-    setAlertMsg(`Se agregó 1 unidad de "${product.name}" al carrito.`);
+    const normalized = {
+      id: product.id,
+      name: product.nombre ?? product.name,
+      price: Number(product.precio ?? product.price) || 0,
+    };
+    addToCart(normalized, 1);
+    setAlertMsg(`Se agregó 1 unidad de "${normalized.name}" al carrito.`);
     setShowAlert(true);
     setTimeout(() => setShowAlert(false), 2000);
   };
 
   const handleConfirm = () => {
     if (modalProduct) {
-      addToCart({ ...modalProduct }, quantity);
+      const normalized = {
+        id: modalProduct.id,
+        name: modalProduct.nombre ?? modalProduct.name,
+        price: Number(modalProduct.precio ?? modalProduct.price) || 0,
+      };
+      addToCart(normalized, quantity);
     }
     setShowModal(false);
   };
@@ -70,73 +99,36 @@ export default function CategoriaVehiculos() {
       <h2 style={{color: '#e11d48', fontWeight: 900, letterSpacing: 2}}>Vehículos coleccionables</h2>
       <p>Aquí podrás agregar y mostrar los productos de la categoría Vehículos coleccionables.</p>
       <div className="row mt-4">
-        {/* Camioneta 4x4 a Control Remoto con Luces Captor Speed Thunder Rojo */}
-        <div className="col-md-6 col-lg-4 mb-4">
-          <div className="card h-100 shadow-sm border-2" style={{borderColor: '#fbbf24', borderRadius: 18}}>
-            <img src={camioneta4x4Img} className="card-img-top p-3" alt="Camioneta 4x4 a Control Remoto con Luces Captor Speed Thunder Rojo" style={{height: 260, objectFit: 'contain'}} />
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title" style={{fontWeight: 700}}>Camioneta 4x4 a Control Remoto con Luces Captor Speed Thunder Rojo</h5>
-              <div className="mb-2">
-                <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$19.000</span>
-                <span className="ms-2 text-decoration-line-through" style={{color: '#888', fontSize: '1rem'}}>$26.000</span>
+        {loading ? (
+          <div>Cargando productos...</div>
+        ) : products.length === 0 ? (
+          <p>No hay productos en esta categoría.</p>
+        ) : (
+          products.map((p) => (
+            <div className="col-md-6 col-lg-4 mb-4" key={p.id}>
+              <div className="card h-100 shadow-sm border-2" style={{borderColor: '#fbbf24', borderRadius: 18}}>
+                {p.imagen ? (
+                  <img src={getMediaUrl(p.imagen)} className="card-img-top p-3" alt={p.nombre ?? p.name} style={{height: 260, objectFit: 'contain'}} />
+                ) : (
+                  <img src={camionetaFallback} className="card-img-top p-3" alt={p.nombre ?? p.name} style={{height: 260, objectFit: 'contain'}} />
+                )}
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title" style={{fontWeight: 700}}>{p.nombre ?? p.name}</h5>
+                  <div className="mb-2">
+                    <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>${(Number(p.precio ?? p.price) || 0).toLocaleString()}</span>
+                  </div>
+                  <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
+                  {user?.role !== 'admin' && (
+                    <>
+                      <button className="btn w-100 mt-auto mb-2" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => openAddModal(p)}>Agregar al carrito</button>
+                      <button className="btn btn-outline-secondary w-100" onClick={() => handleQuickAdd(p)}>Agregar 1 unidad</button>
+                    </>
+                  )}
+                </div>
               </div>
-              <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              {user?.role !== 'admin' && (
-                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'camioneta4x4', name: 'Camioneta 4x4 a Control Remoto con Luces Captor Speed Thunder Rojo', price: 19000})}>Agregar al carrito</button>
-              )}
             </div>
-          </div>
-        </div>
-        {/* Camión Spiderman Edición Limitada */}
-        <div className="col-md-6 col-lg-4 mb-4">
-          <div className="card h-100 shadow-sm border-2" style={{borderColor: '#fbbf24', borderRadius: 18}}>
-            <img src={spidermantruckImg} className="card-img-top p-3" alt="Camión Spiderman Edición Limitada" style={{height: 260, objectFit: 'contain'}} />
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title" style={{fontWeight: 700}}>Camión Spiderman Edición Limitada</h5>
-              <div className="mb-2">
-                <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$21.000</span>
-              </div>
-              <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              {user?.role !== 'admin' && (
-                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'spidermantruck', name: 'Camión Spiderman Edición Limitada', price: 21000})}>Agregar al carrito</button>
-              )}
-            </div>
-          </div>
-        </div>
-        {/* Auto a Fricción Spiderman Color Rojo Negro */}
-        <div className="col-md-6 col-lg-4 mb-4">
-          <div className="card h-100 shadow-sm border-2" style={{borderColor: '#fbbf24', borderRadius: 18}}>
-            <img src={spidermaninvolcableImg} className="card-img-top p-3" alt="Auto a Fricción Spiderman Color Rojo Negro" style={{height: 260, objectFit: 'contain'}} />
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title" style={{fontWeight: 700}}>Auto a Fricción Spiderman Color Rojo Negro</h5>
-              <div className="mb-2">
-                <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$10.900</span>
-                <span className="ms-2 text-decoration-line-through" style={{color: '#888', fontSize: '1rem'}}>$13.600</span>
-              </div>
-              <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              {user?.role !== 'admin' && (
-                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'spidermaninvolcable', name: 'Auto a Fricción Spiderman Color Rojo Negro', price: 10900})}>Agregar al carrito</button>
-              )}
-            </div>
-          </div>
-        </div>
-        {/* Auto Volver Al Futuro Back To The Future III Escala 1:24 */}
-        <div className="col-md-6 col-lg-4 mb-4">
-          <div className="card h-100 shadow-sm border-2" style={{borderColor: '#fbbf24', borderRadius: 18}}>
-            <img src={autovolveralfuturoImg} className="card-img-top p-3" alt="Auto Volver Al Futuro Back To The Future III Escala 1:24" style={{height: 260, objectFit: 'contain'}} />
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title" style={{fontWeight: 700}}>Auto Volver Al Futuro Back To The Future III Escala 1:24</h5>
-              <div className="mb-2">
-                <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$53.900</span>
-                <span className="ms-2 text-decoration-line-through" style={{color: '#888', fontSize: '1rem'}}>$71.800</span>
-              </div>
-              <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              {user?.role !== 'admin' && (
-                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'autovolveralfuturo', name: 'Auto Volver Al Futuro Back To The Future III Escala 1:24', price: 53900})}>Agregar al carrito</button>
-              )}
-            </div>
-          </div>
-        </div>
+          ))
+        )}
       </div>
       {/* Modal Bootstrap */}
       {showModal && (
@@ -148,13 +140,13 @@ export default function CategoriaVehiculos() {
                 <button type="button" className="btn-close" aria-label="Close" onClick={handleClose}></button>
               </div>
               <div className="modal-body">
-                <p><strong>{modalProduct?.name}</strong></p>
-                <p>Precio unitario: ${modalProduct?.price.toLocaleString()}</p>
+                <p><strong>{modalProduct?.nombre ?? modalProduct?.name}</strong></p>
+                <p>Precio unitario: ${(Number(modalProduct?.precio ?? modalProduct?.price) || 0).toLocaleString()}</p>
                 <div className="mb-3">
                   <label htmlFor="cantidad" className="form-label">Cantidad:</label>
                   <input type="number" id="cantidad" className="form-control" min="1" value={quantity} onChange={e => setQuantity(Math.max(1, parseInt(e.target.value)||1))} style={{width: 100}} />
                 </div>
-                <p className="fw-bold">Total: ${(modalProduct?.price * quantity).toLocaleString()}</p>
+                <p className="fw-bold">Total: ${( (Number(modalProduct?.precio ?? modalProduct?.price) || 0) * quantity).toLocaleString()}</p>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={handleClose}>Cancelar</button>

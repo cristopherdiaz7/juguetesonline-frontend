@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
+import DebugApi from './components/DebugApi';
 import BusquedaGlobal from './views/BusquedaGlobal';
 import Login from './views/Login';
 import Register from './views/Register';
@@ -12,15 +13,18 @@ import CategoriaVehiculos from './views/CategoriaVehiculos';
 import ProtectedRoute from './components/ProtectedRoute';
 import Cart from './views/Cart';
 import AdminDashboard from './views/AdminDashboard';
+import Usuarios from './views/Usuarios';
 import MyOrders from './views/MyOrders';
 import ChangePassword from './views/ChangePassword';
 import './App.css';
 
 import Navbar from './components/Navbar';
+import NotificationsToast from './components/NotificationsToast';
 
 function App() {
   return (
     <>
+      <NotificationsToast />
       <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
@@ -41,7 +45,13 @@ function App() {
             <AdminDashboard />
           </ProtectedRoute>
         } />
+        <Route path="/usuarios" element={
+          <ProtectedRoute>
+            <Usuarios />
+          </ProtectedRoute>
+        } />
         <Route path="/buscar" element={<BusquedaGlobal />} />
+  <Route path="/debug" element={<DebugApi />} />
         <Route path="/mis-pedidos" element={
           <ProtectedRoute>
             <MyOrders />

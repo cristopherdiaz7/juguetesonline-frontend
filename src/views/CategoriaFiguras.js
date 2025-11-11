@@ -1,13 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import api, { getMediaUrl } from '../services/api';
 import spidermanImg from '../assets/spiderman.jpg';
-import deadpoolImg from '../assets/deadpool.jpg';
-import iromanImg from '../assets/iroman.jpg';
-import groguImg from '../assets/grogu.jpg';
-import batmanImg from '../assets/batman.jpg';
-import messiImg from '../assets/messi.jpg';
 
 export default function CategoriaFiguras() {
   const [showAlert, setShowAlert] = useState(false);
@@ -17,6 +13,27 @@ export default function CategoriaFiguras() {
   const [showModal, setShowModal] = useState(false);
   const [modalProduct, setModalProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const resp = await api.get('/productos/?categoria=figuras');
+        if (mounted) {
+          const items = resp.data || [];
+          // ensure client-side filter as fallback if backend doesn't filter
+          setProducts(items.filter(p => (p.categoria || '').toLowerCase() === 'figuras'));
+        }
+      } catch (e) {
+        console.error('Error cargando productos figuras', e);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
 
   const handleAddClick = (product) => {
     if (!user) {
@@ -38,8 +55,9 @@ export default function CategoriaFiguras() {
 
   const handleConfirm = () => {
     if (modalProduct) {
-      addToCart({ ...modalProduct }, quantity);
-      setAlertMsg(`Se agregó${quantity > 1 ? `n` : ''} ${quantity} unidad${quantity > 1 ? 'es' : ''} de "${modalProduct.name}" al carrito.`);
+      // Use backend product id and backend fields
+      addToCart({ id: modalProduct.id, name: modalProduct.nombre ?? modalProduct.name, price: Number(modalProduct.precio ?? modalProduct.price) || 0 }, quantity);
+      setAlertMsg(`Se agregó${quantity > 1 ? `n` : ''} ${quantity} unidad${quantity > 1 ? 'es' : ''} de "${modalProduct.nombre ?? modalProduct.name}" al carrito.`);
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 2000);
     }
@@ -47,7 +65,6 @@ export default function CategoriaFiguras() {
   };
 
   const handleClose = () => setShowModal(false);
-
 
   return (
     <div className="container mt-4">
@@ -58,103 +75,38 @@ export default function CategoriaFiguras() {
         </div>
       )}
       <div className="row mt-4">
-        {/* Spiderman */}
-        <div className="col-md-6 col-lg-4 mb-4">
-          <div className="card h-100 shadow-sm border-2" style={{borderColor: '#fbbf24', borderRadius: 18}}>
-            <img src={spidermanImg} className="card-img-top p-3" alt="Spiderman Titan Hero Figura De 30 Cm." style={{height: 260, objectFit: 'contain'}} />
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title" style={{fontWeight: 700}}>Spiderman Titan Hero Figura De 30 Cm.</h5>
-              <div className="mb-2">
-                <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$52.000</span>
+        {loading ? (
+          <div>Cargando productos...</div>
+        ) : products.length === 0 ? (
+          <p>No hay productos en esta categoría.</p>
+        ) : (
+          products.map(p => (
+            <div className="col-md-6 col-lg-4 mb-4" key={p.id}>
+              <div className="card h-100 shadow-sm border-2" style={{borderColor: '#fbbf24', borderRadius: 18}}>
+                {/* If backend provides imagen url use it, otherwise fallback to empty box */}
+                <div style={{height:260, display:'flex', alignItems:'center', justifyContent:'center', padding:16}}>
+                  {p.imagen ? (
+                    <img src={getMediaUrl(p.imagen)} alt={p.nombre ?? p.name} style={{maxHeight: '100%', maxWidth: '100%', objectFit:'contain'}} />
+                  ) : (
+                    <img src={spidermanImg} alt={p.nombre ?? p.name} style={{maxHeight: '100%', maxWidth: '100%', objectFit:'contain'}} />
+                  )}
+                </div>
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title" style={{fontWeight: 700}}>{p.nombre ?? p.name}</h5>
+                  <div className="mb-2">
+                    <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>${(Number(p.precio ?? p.price) || 0).toLocaleString()}</span>
+                  </div>
+                  <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
+                  {user?.role !== 'admin' && (
+                    <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick(p)}>Agregar al carrito</button>
+                  )}
+                </div>
               </div>
-              <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              {user?.role !== 'admin' && (
-                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'spiderman', name: 'Spiderman Titan Hero Figura De 30 Cm.', price: 52000})}>Agregar al carrito</button>
-              )}
             </div>
-          </div>
-        </div>
-        {/* Deadpool */}
-        <div className="col-md-6 col-lg-4 mb-4">
-          <div className="card h-100 shadow-sm border-2" style={{borderColor: '#fbbf24', borderRadius: 18}}>
-            <img src={deadpoolImg} className="card-img-top p-3" alt="Figura Articulado De Marvel Deadpool 30 Cm" style={{height: 260, objectFit: 'contain'}} />
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title" style={{fontWeight: 700}}>Figura Articulado De Marvel Deadpool 30 Cm</h5>
-              <div className="mb-2">
-                <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$46.000</span>
-              </div>
-              <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              {user?.role !== 'admin' && (
-                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'deadpool', name: 'Figura Articulado De Marvel Deadpool 30 Cm', price: 46000})}>Agregar al carrito</button>
-              )}
-            </div>
-          </div>
-        </div>
-        {/* Iron Man */}
-        <div className="col-md-6 col-lg-4 mb-4">
-          <div className="card h-100 shadow-sm border-2" style={{borderColor: '#fbbf24', borderRadius: 18}}>
-            <img src={iromanImg} className="card-img-top p-3" alt="Figura Ironman Titan Hero" style={{height: 260, objectFit: 'contain'}} />
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title" style={{fontWeight: 700}}>Figura Ironman Titan Hero</h5>
-              <div className="mb-2">
-                <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$51.000</span>
-              </div>
-              <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              {user?.role !== 'admin' && (
-                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'iroman', name: 'Figura Ironman Titan Hero', price: 51000})}>Agregar al carrito</button>
-              )}
-            </div>
-          </div>
-        </div>
-        {/* Grogu */}
-        <div className="col-md-6 col-lg-4 mb-4">
-          <div className="card h-100 shadow-sm border-2" style={{borderColor: '#fbbf24', borderRadius: 18}}>
-            <img src={groguImg} className="card-img-top p-3" alt="Figura Grogu Star Wars" style={{height: 260, objectFit: 'contain'}} />
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title" style={{fontWeight: 700}}>Figura Grogu Star Wars</h5>
-              <div className="mb-2">
-                <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$47.000</span>
-              </div>
-              <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              {user?.role !== 'admin' && (
-                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'grogu', name: 'Figura Grogu Star Wars', price: 47000})}>Agregar al carrito</button>
-              )}
-            </div>
-          </div>
-        </div>
-        {/* Batman */}
-        <div className="col-md-6 col-lg-4 mb-4">
-          <div className="card h-100 shadow-sm border-2" style={{borderColor: '#fbbf24', borderRadius: 18}}>
-            <img src={batmanImg} className="card-img-top p-3" alt="Figura Batman DC Comics" style={{height: 260, objectFit: 'contain'}} />
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title" style={{fontWeight: 700}}>Figura Batman DC Comics</h5>
-              <div className="mb-2">
-                <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$53.000</span>
-              </div>
-              <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              {user?.role !== 'admin' && (
-                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'batman', name: 'Figura Batman DC Comics', price: 53000})}>Agregar al carrito</button>
-              )}
-            </div>
-          </div>
-        </div>
-        {/* Messi */}
-        <div className="col-md-6 col-lg-4 mb-4">
-          <div className="card h-100 shadow-sm border-2" style={{borderColor: '#fbbf24', borderRadius: 18}}>
-            <img src={messiImg} className="card-img-top p-3" alt="Figura Messi Selección Argentina" style={{height: 260, objectFit: 'contain'}} />
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title" style={{fontWeight: 700}}>Figura Messi Selección Argentina</h5>
-              <div className="mb-2">
-                <span style={{fontWeight: 900, color: '#222', fontSize: '1.3rem'}}>$55.000</span>
-              </div>
-              <div className="mb-1" style={{color: '#22c55e', fontWeight: 600}}>Envío Gratis</div>
-              {user?.role !== 'admin' && (
-                <button className="btn w-100 mt-auto" style={{background: '#e11d48', color: '#fff', fontWeight: 700, borderRadius: 12, fontSize: '1.1rem'}} onClick={() => handleAddClick({id: 'messi', name: 'Figura Messi Selección Argentina', price: 55000})}>Agregar al carrito</button>
-              )}
-            </div>
-          </div>
-        </div>
+          ))
+        )}
       </div>
+
       {/* Modal de confirmación */}
       {showModal && (
         <div className="modal show" style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}>
@@ -166,7 +118,7 @@ export default function CategoriaFiguras() {
               </div>
               <div className="modal-body">
                 <p>
-                  ¿Cuántos <b>{modalProduct?.name}</b> quieres agregar?
+                  ¿Cuántos <b>{modalProduct?.nombre ?? modalProduct?.name}</b> quieres agregar?
                 </p>
                 <input
                   type="number"

@@ -39,12 +39,14 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (login(username, password)) {
+    setError('');
+    const res = await login(username, password);
+    if (res.ok) {
       navigate('/');
     } else {
-      setError('Usuario o contraseña incorrectos');
+      setError(res.error?.detail || 'Usuario o contraseña incorrectos');
     }
   };
 
