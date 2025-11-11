@@ -1,0 +1,111 @@
+body {
+  background: linear-gradient(135deg, #fef9c3 0%, #fbbf24 100%) !important;
+}
+
+.busqueda-global-container {
+  min-height: 100vh;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  background: linear-gradient(135deg, #fef9c3 0%, #fbbf24 100%);
+}
+
+.busqueda-global-card {
+  border-radius: 24px;
+  background: #fffbe6;
+  box-shadow: 0 4px 16px #fbbf2460;
+}
+
+.busqueda-global-img {
+  height: 180px;
+  object-fit: contain;
+  background: linear-gradient(135deg, #fbbf24 0%, #fef9c3 100%);
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  padding: 16px;
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px #fbbf2440;
+}
+
+.busqueda-global-title {
+  font-weight: 900;
+  font-family: 'Comic Sans MS', Comic Sans, cursive;
+  color: #f43f5e;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.busqueda-global-price {
+  font-weight: 900;
+  color: #f59e42;
+  font-size: 1.5rem;
+  background: #fff;
+  border-radius: 8px;
+  padding: 2px 12px;
+  box-shadow: 0 1px 4px #fbbf2440;
+}
+
+.busqueda-global-btn {
+  background: linear-gradient(90deg, #f43f5e 0%, #fbbf24 100%);
+  color: #fff;
+  font-weight: 900;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px #fbbf2440;
+  margin-top: auto;
+}
+
+.busqueda-global-modal-content {
+  border-radius: 24px;
+  background: #fffbe6;
+}
+.busqueda-global-modal-header {
+  background: linear-gradient(90deg, #fbbf24 0%, #f43f5e 100%);
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+.busqueda-global-modal-title {
+  font-weight: 900;
+  color: #fff;
+  font-family: 'Comic Sans MS', Comic Sans, cursive;
+}
+.busqueda-global-modal-body {
+  text-align: center;
+}
+.busqueda-global-modal-label {
+  font-weight: 700;
+  color: #f43f5e;
+}
+.busqueda-global-modal-input {
+  width: 100px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  border: 2px solid #fbbf24;
+}
+.busqueda-global-modal-total {
+  font-weight: 900;
+  color: #f59e42;
+  font-size: 1.2rem;
+}
+.busqueda-global-modal-footer {
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  display: flex;
+  justify-content: center;
+}
+.busqueda-global-modal-btn-cancel {
+  background: #fbbf24;
+  color: #fff;
+  font-weight: 900;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  margin-right: 12px;
+}
+.busqueda-global-modal-btn-add {
+  background: #f43f5e;
+  color: #fff;
+  font-weight: 900;
+  border-radius: 16px;
+  font-size: 1.1rem;
+}

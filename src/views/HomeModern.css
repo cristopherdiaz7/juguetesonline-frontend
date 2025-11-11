@@ -1,0 +1,110 @@
+body {
+  background: linear-gradient(135deg, #e0e7ff 0%, #fef9c3 100%) !important;
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+}
+
+.home-modern-container {
+  min-height: 100vh;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  background: linear-gradient(135deg, #e0e7ff 0%, #fef9c3 100%);
+}
+
+.home-modern-title {
+  text-align: center;
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  font-weight: 900;
+  font-size: 3rem;
+  color: #2563eb;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 0 #fbbf24, 4px 4px 0 #fff;
+  margin-bottom: 2.5rem;
+  text-transform: uppercase;
+}
+
+.home-modern-card {
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 6px 24px #2563eb30;
+  border: none;
+  margin-bottom: 2rem;
+  transition: box-shadow 0.2s;
+}
+.home-modern-card:hover {
+  box-shadow: 0 12px 32px #2563eb50;
+}
+
+.home-modern-section {
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  border-radius: 24px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 12px #2563eb20;
+}
+.home-modern-section.promos {
+  background: linear-gradient(90deg, #fbbf24 0%, #fef9c3 100%);
+  border-left: 8px solid #fbbf24;
+}
+.home-modern-section.destacados {
+  background: linear-gradient(90deg, #38bdf8 0%, #e0e7ff 100%);
+  border-left: 8px solid #38bdf8;
+}
+.home-modern-section.categorias {
+  background: linear-gradient(90deg, #a3e635 0%, #e0e7ff 100%);
+  border-left: 8px solid #a3e635;
+}
+.home-modern-section-icon {
+  font-size: 2.8rem;
+  margin-right: 24px;
+  filter: drop-shadow(0 2px 4px #2563eb40);
+}
+.home-modern-section-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #2563eb;
+  margin-bottom: 0.5rem;
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+}
+.home-modern-section-desc {
+  font-size: 1.1rem;
+  color: #64748b;
+  font-weight: 500;
+}
+.home-modern-navbar-btn {
+  font-weight: 700;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  padding: 8px 28px;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #2563eb 0%, #fbbf24 100%);
+  color: #fff;
+  border: none;
+  box-shadow: 0 2px 8px #2563eb30;
+  transition: background 0.2s;
+}
+.home-modern-navbar-btn:hover {
+  background: linear-gradient(90deg, #fbbf24 0%, #2563eb 100%);
+  color: #2563eb;
+}
+.home-modern-navbar-cart {
+  background: linear-gradient(90deg, #f43f5e 0%, #fbbf24 100%);
+  color: #fff;
+  font-weight: 900;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px #fbbf2440;
+  position: relative;
+}
+.home-modern-navbar-cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -18px;
+  background: #fbbf24;
+  color: #2563eb;
+  font-weight: 900;
+  border-radius: 50%;
+  padding: 4px 10px;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px #fbbf2440;
+}
