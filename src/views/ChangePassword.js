@@ -11,7 +11,7 @@ export default function ChangePassword() {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState(''); // success o danger
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
 
@@ -33,14 +33,17 @@ export default function ChangePassword() {
       return;
     }
 
-    const result = changePassword(user.username, currentPassword, newPassword);
-    setMessage(result.message);
-    setMessageType(result.success ? 'success' : 'danger');
-
-    if (result.success) {
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
+    setMessageType('');
+    try {
+      const result = await changePassword(user.username, currentPassword, newPassword);
+      setMessage(result.message || (result.success ? 'Contraseña actualizada' : 'Error al cambiar contraseña'));
+      setMessageType(result.success ? 'success' : 'danger');
+      if (result.success) {
+        setTimeout(() => navigate('/'), 2000);
+      }
+    } catch (err) {
+      setMessage('Error de red o servidor');
+      setMessageType('danger');
     }
   };
 

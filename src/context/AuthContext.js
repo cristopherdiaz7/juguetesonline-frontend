@@ -128,8 +128,20 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const changePassword = async (username, currentPassword, newPassword) => {
+    // username param kept for compatibility with UI, but server uses authenticated user
+    if (!currentPassword || !newPassword) return { success: false, message: 'Missing passwords' };
+    try {
+      const resp = await api.post('/user/change_password/', { current_password: currentPassword, new_password: newPassword });
+      return { success: true, message: resp.data?.message || 'Password changed' };
+    } catch (err) {
+      const msg = err.response?.data?.error || err.response?.data || err.message;
+      return { success: false, message: typeof msg === 'string' ? msg : JSON.stringify(msg) };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, accessToken, refreshToken, loading, login, register, logout, refreshAccessToken, setUser }}>
+    <AuthContext.Provider value={{ user, accessToken, refreshToken, loading, login, register, logout, refreshAccessToken, changePassword, setUser }}>
       {children}
     </AuthContext.Provider>
   );
