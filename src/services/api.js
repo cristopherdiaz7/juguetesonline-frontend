@@ -1,11 +1,24 @@
 import axios from 'axios';
 
+// Build base URL from environment variable. In production we warn loudly if
+// the env var is missing so the app doesn't silently call localhost.
+const RAW_API = process.env.REACT_APP_API_URL || '';
+if (process.env.NODE_ENV === 'production' && !RAW_API) {
+  // eslint-disable-next-line no-console
+  console.error('REACT_APP_API_URL is not defined. Frontend will not be able to reach the API in production.');
+}
+
+// Ensure trailing slashes are normalized. If RAW_API is provided we append
+// the `/api` suffix (the backend endpoints live under /api).
+const baseUrl = RAW_API ? RAW_API.replace(/\/+$/, '') + '/api' : 'http://127.0.0.1:8000/api';
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000/api',
+  baseURL: baseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
 if (process.env.NODE_ENV === 'development') {
   console.log('API Base URL:', api.defaults.baseURL);
 }
@@ -59,7 +72,9 @@ api.interceptors.response.use(
       }
 
       try {
-        const resp = await axios.post(`${api.defaults.baseURL}/token/refresh/`, { refresh: refreshToken });
+        // Use the configured baseUrl to post to the refresh endpoint. We use
+        // the top-level axios to avoid triggering this instance's interceptors.
+        const resp = await axios.post(`${baseUrl}/token/refresh/`, { refresh: refreshToken });
         const newAccess = resp.data.access;
         localStorage.setItem('access_token', newAccess);
         setAuthToken(newAccess);
