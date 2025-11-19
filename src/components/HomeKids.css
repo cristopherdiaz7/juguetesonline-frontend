@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+
+.home-kids-bg {
+  background: url('../assets/fondojuguetes.png') center center/cover no-repeat fixed !important;
+  min-height: 100vh;
+  padding-top: 32px;
+}
+.home-kids-title, .home-kids-section-title {
+  color: #ff1744 !important;
+  text-shadow: none !important;
+}
+.home-kids-title {
+  font-family: 'Fredoka One', Arial, sans-serif;
+  font-size: 3.2rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  animation: bounceIn 1.2s;
+}
+.home-kids-section {
+  border-radius: 40px;
+  background: #ffd600;
+  box-shadow: none;
+  margin-bottom: 2rem;
+  padding: 2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  animation: fadeInUp 1s;
+}
+.home-kids-section.ventas {
+  background: #00c853;
+}
+.home-kids-section.promos {
+  background: #ff6f00;
+}
+.home-kids-section.categorias {
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 32px;
+}
+.home-kids-section-icon {
+  font-size: 3.2rem;
+  margin-right: 18px;
+  filter: none;
+}
+.home-kids-section-title {
+  font-family: 'Fredoka One', Arial, sans-serif;
+  font-size: 1.7rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  letter-spacing: 2px;
+  text-shadow: none;
+}
+.home-kids-section-desc {
+  font-family: 'Fredoka One', Arial, sans-serif;
+  font-size: 1.15rem;
+  color: #ff1744;
+  font-weight: 700;
+}
+.home-kids-btn {
+  font-family: 'Fredoka One', Arial, sans-serif;
+  font-weight: 900;
+  border-radius: 40px;
+  font-size: 1.25rem;
+  padding: 16px 40px;
+  margin-bottom: 14px;
+  background: #ff1744;
+  color: #fff;
+  border: none;
+  box-shadow: none;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  animation: bounceIn 1.2s;
+}
+.home-kids-btn:hover {
+  background: #ffd600;
+  color: #2979ff;
+  transform: scale(1.08) translateY(-4px);
+  animation: bounce 0.7s;
+}
